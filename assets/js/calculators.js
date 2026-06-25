@@ -1,28 +1,28 @@
 /**
  * calculators.js
- * Engineering Calculators — Tab switching + Live calculations
+ * Engineering Calculators — Tab switching + Live real-time calculations
+ * Place in: /wp-content/themes/YOUR-THEME/assets/js/
+ * All IDs and classes prefixed with "vc-" to avoid WordPress conflicts
  */
 
 document.addEventListener("DOMContentLoaded", function () {
   /* =============================================
        TAB SWITCHING
        ============================================= */
-  const navItems = document.querySelectorAll(".nav-item");
-  const calcCards = document.querySelectorAll(".calc-card");
+  var navItems = document.querySelectorAll(".vc-nav-item");
+  var calcCards = document.querySelectorAll(".vc-calc-card");
 
   navItems.forEach(function (btn) {
     btn.addEventListener("click", function () {
-      const target = btn.getAttribute("data-tab");
+      var target = btn.getAttribute("data-tab");
 
-      // Update nav active state
       navItems.forEach(function (b) {
         b.classList.remove("active");
       });
       btn.classList.add("active");
 
-      // Show matching card
       calcCards.forEach(function (card) {
-        if (card.id === "tab-" + target) {
+        if (card.id === "vc-tab-" + target) {
           card.classList.add("active");
         } else {
           card.classList.remove("active");
@@ -32,133 +32,126 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   /* =============================================
-       1. AIRFLOW CALCULATOR
-       Q (L/s) = Velocity (m/s) × Area (m²) × 1000
+       HELPER — safe parse
        ============================================= */
-  var afVelocity = document.getElementById("airflow-velocity");
-  var afArea = document.getElementById("airflow-area");
-  var afResult = document.getElementById("airflow-result");
-
-  function calcAirflow() {
-    var v = parseFloat(afVelocity.value) || 0;
-    var a = parseFloat(afArea.value) || 0;
-    var q = v * a * 1000; // L/s
-    afResult.innerHTML = q.toFixed(2) + ' <span class="result-unit">L/s</span>';
+  function num(id) {
+    var el = document.getElementById(id);
+    return el ? parseFloat(el.value) || 0 : 0;
   }
 
-  afVelocity.addEventListener("input", calcAirflow);
-  afArea.addEventListener("input", calcAirflow);
+  function set(id, html) {
+    var el = document.getElementById(id);
+    if (el) el.innerHTML = html;
+  }
+
+  function setText(id, txt) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = txt;
+  }
+
+  function listen(id, fn) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", fn);
+  }
+
+  /* =============================================
+       1. AIRFLOW
+       Q (L/s) = Velocity (m/s) × Area (m²) × 1000
+       ============================================= */
+  function calcAirflow() {
+    var q = num("vc-airflow-velocity") * num("vc-airflow-area") * 1000;
+    set(
+      "vc-airflow-result",
+      q.toFixed(2) + ' <span class="vc-result-unit">L/s</span>',
+    );
+  }
+  listen("vc-airflow-velocity", calcAirflow);
+  listen("vc-airflow-area", calcAirflow);
   calcAirflow();
 
   /* =============================================
-       2. DUCT SIZE — CIRCULAR EQUIVALENT
+       2. DUCT SIZE — Circular Equivalent Diameter
        De = 1.30 × (a×b)^0.625 / (a+b)^0.25
-       a = width (mm), b = height (mm)
        ============================================= */
-  var ductW = document.getElementById("duct-width");
-  var ductH = document.getElementById("duct-height");
-  var ductResult = document.getElementById("duct-result");
-
   function calcDuctSize() {
-    var a = parseFloat(ductW.value) || 0;
-    var b = parseFloat(ductH.value) || 0;
+    var a = num("vc-duct-width");
+    var b = num("vc-duct-height");
     if (a <= 0 || b <= 0) {
-      ductResult.innerHTML = '— <span class="result-unit">mm</span>';
+      set("vc-duct-result", '— <span class="vc-result-unit">mm</span>');
       return;
     }
     var de = (1.3 * Math.pow(a * b, 0.625)) / Math.pow(a + b, 0.25);
-    ductResult.innerHTML =
-      Math.round(de) + ' <span class="result-unit">mm</span>';
+    set(
+      "vc-duct-result",
+      Math.round(de) + ' <span class="vc-result-unit">mm</span>',
+    );
   }
-
-  ductW.addEventListener("input", calcDuctSize);
-  ductH.addEventListener("input", calcDuctSize);
+  listen("vc-duct-width", calcDuctSize);
+  listen("vc-duct-height", calcDuctSize);
   calcDuctSize();
 
   /* =============================================
        3. PRESSURE CONVERSION
        Input: Pascals (Pa)
-       MMWG  = Pa × 0.10197
+       MMWG   = Pa × 0.10197
        IN.W.G = Pa × 0.004015
        ============================================= */
-  var pressurePa = document.getElementById("pressure-pa");
-  var pressureMmwg = document.getElementById("pressure-mmwg");
-  var pressureInwg = document.getElementById("pressure-inwg");
-
   function calcPressure() {
-    var pa = parseFloat(pressurePa.value) || 0;
-    var mmwg = pa * 0.10197;
-    var inwg = pa * 0.004015;
-    pressureMmwg.textContent = mmwg.toFixed(2);
-    pressureInwg.textContent = inwg.toFixed(3);
+    var pa = num("vc-pressure-pa");
+    setText("vc-pressure-mmwg", (pa * 0.10197).toFixed(2));
+    setText("vc-pressure-inwg", (pa * 0.004015).toFixed(3));
   }
-
-  pressurePa.addEventListener("input", calcPressure);
+  listen("vc-pressure-pa", calcPressure);
   calcPressure();
 
   /* =============================================
-       4. FREE AREA CALCULATOR
-       Effective Free Area = (W × H / 1,000,000) × Factor
-       W, H in mm → m², Factor is a decimal (0–1)
+       4. FREE AREA
+       Effective Area = (W × H / 1,000,000) × Factor
+       W & H in mm → converts to m²
        ============================================= */
-  var freeW = document.getElementById("free-w");
-  var freeH = document.getElementById("free-h");
-  var freeFactor = document.getElementById("free-factor");
-  var freeResult = document.getElementById("freearea-result");
-
   function calcFreeArea() {
-    var w = parseFloat(freeW.value) || 0;
-    var h = parseFloat(freeH.value) || 0;
-    var f = parseFloat(freeFactor.value) || 0;
+    var w = num("vc-free-w");
+    var h = num("vc-free-h");
+    var f = num("vc-free-factor");
     var area = ((w * h) / 1000000) * f;
-    freeResult.innerHTML =
-      area.toFixed(3) + ' <span class="result-unit">m²</span>';
+    set(
+      "vc-freearea-result",
+      area.toFixed(3) + ' <span class="vc-result-unit">m²</span>',
+    );
   }
-
-  freeW.addEventListener("input", calcFreeArea);
-  freeH.addEventListener("input", calcFreeArea);
-  freeFactor.addEventListener("input", calcFreeArea);
+  listen("vc-free-w", calcFreeArea);
+  listen("vc-free-h", calcFreeArea);
+  listen("vc-free-factor", calcFreeArea);
   calcFreeArea();
 
   /* =============================================
        5. FLOW UNIT CONVERTER
        Input: L/s
-       CFM   = L/s × 2.11888
-       M³/H  = L/s × 3.6
+       CFM  = L/s × 2.11888
+       M³/H = L/s × 3.6
        ============================================= */
-  var unitLs = document.getElementById("unit-ls");
-  var unitCfm = document.getElementById("unit-cfm");
-  var unitM3h = document.getElementById("unit-m3h");
-
   function calcUnitConverter() {
-    var ls = parseFloat(unitLs.value) || 0;
-    var cfm = ls * 2.11888;
-    var m3h = ls * 3.6;
-    unitCfm.textContent = cfm.toFixed(1);
-    unitM3h.textContent = m3h.toFixed(1);
+    var ls = num("vc-unit-ls");
+    setText("vc-unit-cfm", (ls * 2.11888).toFixed(1));
+    setText("vc-unit-m3h", (ls * 3.6).toFixed(1));
   }
-
-  unitLs.addEventListener("input", calcUnitConverter);
+  listen("vc-unit-ls", calcUnitConverter);
   calcUnitConverter();
 
   /* =============================================
-       6. ARC LENGTH CALCULATOR
-       Arc Length = (Angle / 360) × 2π × Radius
-       Radius in mm, Angle in degrees
+       6. ARC LENGTH
+       Arc = (Angle / 360) × 2π × Radius
        ============================================= */
-  var arcRadius = document.getElementById("arc-radius");
-  var arcAngle = document.getElementById("arc-angle");
-  var arcResult = document.getElementById("arc-result");
-
   function calcArcLength() {
-    var r = parseFloat(arcRadius.value) || 0;
-    var deg = parseFloat(arcAngle.value) || 0;
+    var r = num("vc-arc-radius");
+    var deg = num("vc-arc-angle");
     var arc = (deg / 360) * 2 * Math.PI * r;
-    arcResult.innerHTML =
-      arc.toFixed(2) + ' <span class="result-unit">mm</span>';
+    set(
+      "vc-arc-result",
+      arc.toFixed(2) + ' <span class="vc-result-unit">mm</span>',
+    );
   }
-
-  arcRadius.addEventListener("input", calcArcLength);
-  arcAngle.addEventListener("input", calcArcLength);
+  listen("vc-arc-radius", calcArcLength);
+  listen("vc-arc-angle", calcArcLength);
   calcArcLength();
 });
