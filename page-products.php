@@ -24,22 +24,22 @@ $contact_url = esc_url(get_permalink(get_page_by_path('contact')));
 $products = [
     [
         'name'        => 'Air Diffusers ',
-        'image'       => ventech_image_url('product-diffuser.jpg'),
+        'image'       => ventech_image_url('diffuser.png'),
         'description' => 'Diffusers are devices used in HVAC systems to distribute air in a space evenly and efficiently. They are installed on the end of air ducts and work by diffusing or dispersing the air in various directions, typically upwards, downwards, or in a horizontal pattern.',
     ],
     [
         'name'        => 'Register & Grilles ',
-        'image'       => ventech_image_url('product-grille.jpg'),
+        'image'       => ventech_image_url('grilles.png'),
         'description' => 'Grilles are devices used to cover openings or vents in a buildings walls, floors, or ceilings, while allowing the passage of air or light. They are commonly used in HVAC systems to distribute air or to return it to the air handler, but they can also serve decorative or security purposes.',
     ],
     [
         'name'        => 'Dampers',
-        'image'       => ventech_image_url('product-damper.jpg'),
+        'image'       => ventech_image_url('dempers.png'),
         'description' => 'Dampers are devices used to reduce or control the movement, vibration, or oscillation of a structure or system. They work by dissipating or absorbing energy, and they can be found in a wide range of applications, from automotive suspensions to HVAC systems.',
     ],
     [
         'name'        => 'Louvres',
-        'image'       => ventech_image_url('product-duct.jpg'),
+        'image'       => ventech_image_url('louvres.png'),
         'description' => 'Louvres, also known as louvers, are a type of window or ventilation system that consists of horizontal slats or blades angled to allow air and light to enter a building while blocking out rain, direct sunlight, and noise.',
     ],
 ];
