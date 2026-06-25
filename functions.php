@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Ventech Grilles — functions.php
  *
@@ -6,24 +7,25 @@
  * and AJAX contact form handler.
  */
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 /* ============================================================
    1. THEME SETUP
    ============================================================ */
-function ventech_setup() {
+function ventech_setup()
+{
     // Enable <title> tag management by WordPress
-    add_theme_support( 'title-tag' );
+    add_theme_support('title-tag');
 
     // Enable featured images on posts/pages
-    add_theme_support( 'post-thumbnails' );
+    add_theme_support('post-thumbnails');
 
     // Register custom image sizes
-    add_image_size( 'ventech-hero',    1920, 1080, true );
-    add_image_size( 'ventech-product', 800,  800,  false );
+    add_image_size('ventech-hero',    1920, 1080, true);
+    add_image_size('ventech-product', 800,  800,  false);
 
     // HTML5 semantic markup support
-    add_theme_support( 'html5', [
+    add_theme_support('html5', [
         'search-form',
         'comment-form',
         'comment-list',
@@ -31,21 +33,22 @@ function ventech_setup() {
         'caption',
         'style',
         'script',
-    ] );
+    ]);
 
     // Register navigation menus
-    register_nav_menus( [
-        'primary-menu' => __( 'Primary Navigation', 'ventech-grilles' ),
-    ] );
+    register_nav_menus([
+        'primary-menu' => __('Primary Navigation', 'ventech-grilles'),
+    ]);
 }
-add_action( 'after_setup_theme', 'ventech_setup' );
+add_action('after_setup_theme', 'ventech_setup');
 
 
 /* ============================================================
    2. ENQUEUE STYLES & SCRIPTS
    ============================================================ */
-function ventech_assets() {
-    $version = wp_get_theme()->get( 'Version' );
+function ventech_assets()
+{
+    $version = wp_get_theme()->get('Version');
     $uri     = get_template_directory_uri();
 
     // Main stylesheet (contains Google Fonts @import + all CSS)
@@ -91,9 +94,23 @@ function ventech_assets() {
         $version,
         true
     );
+    // Enqueue download.js
+    wp_enqueue_script(
+        'ventech-download',
+        $uri . '/assets/js/download.js',
+
+        true
+    );
+    // Enqueue calculator.js
+    wp_enqueue_script(
+        'ventech-calculator',
+        $uri . '/assets/js/calculators.js',
+
+        true
+    );
 
     // Projects region filter (only on the projects page)
-    if ( is_page( 'projects' ) ) {
+    if (is_page('projects')) {
         wp_enqueue_script(
             'ventech-projects-filter',
             $uri . '/assets/js/projects-filter.js',
@@ -104,7 +121,7 @@ function ventech_assets() {
     }
 
     // Contact form AJAX (only on the contact page)
-    if ( is_page( 'contact' ) ) {
+    if (is_page('contact')) {
         wp_enqueue_script(
             'ventech-contact-form',
             $uri . '/assets/js/contact-form.js',
@@ -114,13 +131,13 @@ function ventech_assets() {
         );
 
         // Pass AJAX URL and nonce to JS
-        wp_localize_script( 'ventech-contact-form', 'ventechAjax', [
-            'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-            'nonce'   => wp_create_nonce( 'ventech_contact_nonce' ),
-        ] );
+        wp_localize_script('ventech-contact-form', 'ventechAjax', [
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce'   => wp_create_nonce('ventech_contact_nonce'),
+        ]);
     }
 }
-add_action( 'wp_enqueue_scripts', 'ventech_assets' );
+add_action('wp_enqueue_scripts', 'ventech_assets');
 
 
 /* ============================================================
@@ -131,27 +148,28 @@ add_action( 'wp_enqueue_scripts', 'ventech_assets' );
  * Handle contact form submission (for both logged-in and
  * non-logged-in users via wp_ajax_nopriv_).
  */
-function ventech_handle_contact() {
+function ventech_handle_contact()
+{
     // Verify nonce
-    if ( ! check_ajax_referer( 'ventech_contact_nonce', 'nonce', false ) ) {
-        wp_send_json_error( [ 'message' => 'Security check failed.' ], 403 );
+    if (! check_ajax_referer('ventech_contact_nonce', 'nonce', false)) {
+        wp_send_json_error(['message' => 'Security check failed.'], 403);
         return;
     }
 
     // Sanitize fields
-    $name    = sanitize_text_field( $_POST['name']    ?? '' );
-    $phone   = sanitize_text_field( $_POST['phone']   ?? '' );
-    $email   = sanitize_email(      $_POST['email']   ?? '' );
-    $message = sanitize_textarea_field( $_POST['message'] ?? '' );
+    $name    = sanitize_text_field($_POST['name']    ?? '');
+    $phone   = sanitize_text_field($_POST['phone']   ?? '');
+    $email   = sanitize_email($_POST['email']   ?? '');
+    $message = sanitize_textarea_field($_POST['message'] ?? '');
 
     // Basic validation
-    if ( ! $name || ! $email || ! $message ) {
-        wp_send_json_error( [ 'message' => 'Please fill in all required fields.' ], 422 );
+    if (! $name || ! $email || ! $message) {
+        wp_send_json_error(['message' => 'Please fill in all required fields.'], 422);
         return;
     }
 
-    if ( ! is_email( $email ) ) {
-        wp_send_json_error( [ 'message' => 'Please enter a valid email address.' ], 422 );
+    if (! is_email($email)) {
+        wp_send_json_error(['message' => 'Please enter a valid email address.'], 422);
         return;
     }
 
@@ -165,16 +183,16 @@ function ventech_handle_contact() {
         'Reply-To: ' . $email,
     ];
 
-    $sent = wp_mail( $to, $subject, $body, $headers );
+    $sent = wp_mail($to, $subject, $body, $headers);
 
-    if ( $sent ) {
-        wp_send_json_success( [ 'message' => 'Message sent successfully.' ] );
+    if ($sent) {
+        wp_send_json_success(['message' => 'Message sent successfully.']);
     } else {
-        wp_send_json_error( [ 'message' => 'Could not send email. Please try again later.' ], 500 );
+        wp_send_json_error(['message' => 'Could not send email. Please try again later.'], 500);
     }
 }
-add_action( 'wp_ajax_ventech_contact',        'ventech_handle_contact' );
-add_action( 'wp_ajax_nopriv_ventech_contact', 'ventech_handle_contact' );
+add_action('wp_ajax_ventech_contact',        'ventech_handle_contact');
+add_action('wp_ajax_nopriv_ventech_contact', 'ventech_handle_contact');
 
 
 /* ============================================================
@@ -187,7 +205,8 @@ add_action( 'wp_ajax_nopriv_ventech_contact', 'ventech_handle_contact' );
  * @param  string $filename  Filename inside /assets/images/ (e.g. 'hero-ceiling.jpg')
  * @return string            Full URL
  */
-function ventech_image_url( string $filename ): string {
+function ventech_image_url(string $filename): string
+{
     return get_template_directory_uri() . '/assets/images/' . $filename;
 }
 
@@ -199,8 +218,9 @@ function ventech_image_url( string $filename ): string {
  * @param  string $class Additional CSS classes.
  * @return string        SVG markup (safe to echo directly).
  */
-function ventech_icon( string $name, string $class = '' ): string {
-    $class_attr = $class ? ' class="' . esc_attr( $class ) . '"' : '';
+function ventech_icon(string $name, string $class = ''): string
+{
+    $class_attr = $class ? ' class="' . esc_attr($class) . '"' : '';
 
     $icons = [
         'arrow-right'   => '<svg' . $class_attr . ' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
@@ -216,7 +236,7 @@ function ventech_icon( string $name, string $class = '' ): string {
         'x'             => '<svg' . $class_attr . ' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
     ];
 
-    return $icons[ $name ] ?? '';
+    return $icons[$name] ?? '';
 }
 
 
@@ -231,9 +251,10 @@ function ventech_icon( string $name, string $class = '' ): string {
  * @param  string $slug  Page slug OR '/' for front page.
  * @return string
  */
-function ventech_active_class( string $slug ): string {
-    if ( $slug === '/' ) {
+function ventech_active_class(string $slug): string
+{
+    if ($slug === '/') {
         return is_front_page() ? 'current-page' : '';
     }
-    return is_page( $slug ) ? 'current-page' : '';
+    return is_page($slug) ? 'current-page' : '';
 }

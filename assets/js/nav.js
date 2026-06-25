@@ -49,9 +49,33 @@
     // Close when clicking outside the header (optional UX improvement)
     document.addEventListener("click", function (e) {
       var header = document.querySelector(".site-header");
-      if (header && !header.contains(e.target) && panel.classList.contains("is-open")) {
+      if (
+        header &&
+        !header.contains(e.target) &&
+        panel.classList.contains("is-open")
+      ) {
         toggleMenu();
       }
     });
+    // nav.js
+    var dropdownBtn = document.querySelector(".nav-link-dropdown");
+    if (dropdownBtn) {
+      dropdownBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        var menu = this.nextElementSibling;
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+      });
+    }
+    // Mobile Dropdown Toggle
+    var mobileDropdownBtn = document.querySelector(".mobile-dropdown-toggle");
+    var mobileDropdownMenu = document.querySelector(".mobile-dropdown-menu");
+
+    if (mobileDropdownBtn) {
+      mobileDropdownBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var isVisible = mobileDropdownMenu.style.display === "block";
+        mobileDropdownMenu.style.display = isVisible ? "none" : "block";
+      });
+    }
   });
 })();
