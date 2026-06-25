@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Template Name: Front Page
  *
@@ -12,43 +13,43 @@
  *  5. Contact CTA band
  */
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 get_header();
 
-$products_page_url = esc_url( get_permalink( get_page_by_path( 'products' ) ) );
-$about_page_url    = esc_url( get_permalink( get_page_by_path( 'about' ) ) );
-$projects_page_url = esc_url( get_permalink( get_page_by_path( 'projects' ) ) );
-$contact_page_url  = esc_url( get_permalink( get_page_by_path( 'contact' ) ) );
-$hero_img          = ventech_image_url( 'hero-ceiling.jpg' );
+$products_page_url = esc_url(get_permalink(get_page_by_path('products')));
+$about_page_url    = esc_url(get_permalink(get_page_by_path('about')));
+$projects_page_url = esc_url(get_permalink(get_page_by_path('projects')));
+$contact_page_url  = esc_url(get_permalink(get_page_by_path('contact')));
+$hero_img          = ventech_image_url('hero-ceiling.jpg');
 
 $products = [
     [
-        'name'        => 'Grilles',
-        'image'       => ventech_image_url( 'product-grille.jpg' ),
-        'description' => 'Grilles are devices used to cover openings or vents in a building\'s walls, floors, or ceilings, while allowing the passage of air or light. They are commonly used in HVAC systems to distribute air or to return it to the air handler, but they can also serve decorative or security purposes.',
+        'name'        => 'Air Diffusers ',
+        'image'       => ventech_image_url('product-diffuser.jpg'),
+        'description' => 'Diffusers are devices used in HVAC systems to distribute air in a space evenly and efficiently. They are installed on the end of air ducts and work by diffusing or dispersing the air in various directions, typically upwards, downwards, or in a horizontal pattern.',
     ],
     [
-        'name'        => 'Diffusers',
-        'image'       => ventech_image_url( 'product-diffuser.jpg' ),
-        'description' => 'Diffusers distribute conditioned air evenly throughout a space, ensuring consistent comfort and performance in HVAC systems.',
+        'name'        => 'Register & Grilles ',
+        'image'       => ventech_image_url('product-grille.jpg'),
+        'description' => 'Grilles are devices used to cover openings or vents in a buildings walls, floors, or ceilings, while allowing the passage of air or light. They are commonly used in HVAC systems to distribute air or to return it to the air handler, but they can also serve decorative or security purposes.',
     ],
     [
         'name'        => 'Dampers',
-        'image'       => ventech_image_url( 'product-damper.jpg' ),
-        'description' => 'Dampers regulate and control the flow of air within HVAC ducts, helping balance system performance and energy efficiency.',
+        'image'       => ventech_image_url('product-damper.jpg'),
+        'description' => 'Dampers are devices used to reduce or control the movement, vibration, or oscillation of a structure or system. They work by dissipating or absorbing energy, and they can be found in a wide range of applications, from automotive suspensions to HVAC systems.',
     ],
     [
-        'name'        => 'Ducts',
-        'image'       => ventech_image_url( 'product-duct.jpg' ),
-        'description' => 'Our sheet metal ducts are meticulously crafted from high-quality materials, ensuring they stand the test of time.',
+        'name'        => 'Louvres',
+        'image'       => ventech_image_url('product-duct.jpg'),
+        'description' => 'Louvres, also known as louvers, are a type of window or ventilation system that consists of horizontal slats or blades angled to allow air and light to enter a building while blocking out rain, direct sunlight, and noise.',
     ],
 ];
 
 $regions = [
-    [ 'name' => 'Victoria',         'image' => ventech_image_url( 'region-vic.jpg' ) ],
-    [ 'name' => 'New South Wales',  'image' => ventech_image_url( 'region-nsw.jpg' ) ],
-    [ 'name' => 'Queensland',       'image' => ventech_image_url( 'region-qld.jpg' ) ],
+    ['name' => 'Victoria',         'image' => ventech_image_url('region-vic.jpg')],
+    ['name' => 'New South Wales',  'image' => ventech_image_url('region-nsw.jpg')],
+    ['name' => 'Queensland',       'image' => ventech_image_url('region-qld.jpg')],
 ];
 ?>
 
@@ -57,12 +58,8 @@ $regions = [
      Matches: <section className="relative overflow-hidden">
      ==================================================== -->
 <section class="hero">
-    <img
-        src="<?php echo esc_url( $hero_img ); ?>"
-        alt="Industrial HVAC ceiling with ventilation grilles"
-        class="hero__bg"
-        width="1920"
-        height="1080">
+    <img src="<?php echo esc_url($hero_img); ?>" alt="Industrial HVAC ceiling with ventilation grilles"
+        class="hero__bg" width="1920" height="1080">
 
     <div class="hero__overlay" aria-hidden="true"></div>
 
@@ -87,7 +84,7 @@ $regions = [
                 </a>
                 <a href="<?php echo $products_page_url; ?>" class="btn btn--primary">
                     Our Products
-                    <?php echo ventech_icon( 'chevron-right', 'icon icon--sm' ); ?>
+                    <?php echo ventech_icon('chevron-right', 'icon icon--sm'); ?>
                 </a>
             </div>
         </div>
@@ -131,30 +128,26 @@ $regions = [
         </div>
 
         <div class="products-grid-home">
-            <?php foreach ( $products as $product ) : ?>
+            <?php foreach ($products as $product) : ?>
                 <article class="product-card-home">
 
                     <div class="product-card-home__body">
                         <p class="product-card-home__eyebrow">Our Products</p>
                         <h3 class="product-card-home__name">
-                            <?php echo esc_html( $product['name'] ); ?>
+                            <?php echo esc_html($product['name']); ?>
                         </h3>
                         <p class="product-card-home__desc">
-                            <?php echo esc_html( $product['description'] ); ?>
+                            <?php echo esc_html($product['description']); ?>
                         </p>
                         <a href="<?php echo $products_page_url; ?>" class="product-card-home__link">
                             See all products
-                            <?php echo ventech_icon( 'arrow-right', 'icon icon--sm' ); ?>
+                            <?php echo ventech_icon('arrow-right', 'icon icon--sm'); ?>
                         </a>
                     </div>
 
                     <div class="product-card-home__image-wrap">
-                        <img
-                            src="<?php echo esc_url( $product['image'] ); ?>"
-                            alt="<?php echo esc_attr( $product['name'] ); ?>"
-                            loading="lazy"
-                            width="800"
-                            height="800">
+                        <img src="<?php echo esc_url($product['image']); ?>"
+                            alt="<?php echo esc_attr($product['name']); ?>" loading="lazy" width="800" height="800">
                     </div>
 
                 </article>
@@ -175,23 +168,19 @@ $regions = [
         </h2>
 
         <div class="regions-grid">
-            <?php foreach ( $regions as $region ) : ?>
+            <?php foreach ($regions as $region) : ?>
                 <a href="<?php echo $projects_page_url; ?>" class="region-card">
-                    <img
-                        src="<?php echo esc_url( $region['image'] ); ?>"
-                        alt="<?php echo esc_attr( $region['name'] ); ?>"
-                        loading="lazy"
-                        width="1200"
-                        height="800">
+                    <img src="<?php echo esc_url($region['image']); ?>" alt="<?php echo esc_attr($region['name']); ?>"
+                        loading="lazy" width="1200" height="800">
 
                     <div class="region-card__overlay" aria-hidden="true"></div>
 
                     <div class="region-card__footer">
                         <h3 class="region-card__name">
-                            <?php echo esc_html( $region['name'] ); ?>
+                            <?php echo esc_html($region['name']); ?>
                         </h3>
                         <span class="region-card__icon" aria-hidden="true">
-                            <?php echo ventech_icon( 'arrow-right', 'icon icon--sm' ); ?>
+                            <?php echo ventech_icon('arrow-right', 'icon icon--sm'); ?>
                         </span>
                     </div>
                 </a>
