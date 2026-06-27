@@ -43,6 +43,7 @@ function ventech_setup()
 add_action('after_setup_theme', 'ventech_setup');
 
 
+
 /* ============================================================
    2. ENQUEUE STYLES & SCRIPTS
    ============================================================ */
