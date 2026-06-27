@@ -35,8 +35,57 @@
                 <nav class="nav-links" aria-label="Primary navigation">
                     <a href="<?php echo esc_url(home_url('/')); ?>"
                         class="<?php echo ventech_active_class('/'); ?>">Home</a>
-                    <a href="<?php echo esc_url(get_permalink(get_page_by_path('products'))); ?>"
-                        class="<?php echo ventech_active_class('products'); ?>">Products</a>
+                    <!-- <a href="<?php echo esc_url(get_permalink(get_page_by_path('products'))); ?>"
+                        class="<?php echo ventech_active_class('products'); ?>">Products</a> -->
+                    <div class="nav-item-dropdown products-dropdown">
+                        <button class="nav-link-dropdown">Products ▾</button>
+                        <div class="dropdown-menu products-menu">
+                            <div class="products-grid">
+                                <a href="/air-diffusers">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                                        <rect x="7" y="7" width="10" height="10" />
+                                    </svg>
+                                    Air Diffusers
+                                </a>
+                                <a href="/damper">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <circle cx="12" cy="12" r="9" />
+                                        <path d="M12 3v9l6 6" />
+                                    </svg>
+                                    Damper
+                                </a>
+                                <a href="/louvres">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M3 6h18M3 12h18M3 18h18" />
+                                        <path d="M3 6l3 12M9 6l3 12M15 6l3 12" />
+                                    </svg>
+                                    Louvres
+                                </a>
+                                <a href="/motorised-diffuser-grille">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                                        <path d="M12 8v8M8 12h8" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg>
+                                    Motorised Diffuser-Grille
+                                </a>
+                                <a href="/registers-grilles">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18" />
+                                    </svg>
+                                    Registers & Grilles
+                                </a>
+                                <a href="/vav-diffuser-grille">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M21 12H3M12 3v18" />
+                                        <circle cx="12" cy="12" r="6" />
+                                    </svg>
+                                    VAV Diffuser-Grille
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     <a href="<?php echo esc_url(get_permalink(get_page_by_path('products'))); ?>"
                         class="<?php echo ventech_active_class('selection-tool'); ?>">Selection Tool</a>
 
@@ -89,7 +138,51 @@
             <div class="nav-mobile" id="nav-mobile-panel" aria-hidden="true">
                 <nav aria-label="Mobile navigation">
                     <a href="<?php echo esc_url(home_url('/')); ?>">Home</a>
-                    <a href="<?php echo esc_url(get_permalink(get_page_by_path('products'))); ?>">Products</a>
+                    <div class="nav-item-dropdown products-dropdown">
+                        <button class="nav-link-dropdown">Products ▾</button>
+                        <div class="dropdown-menu products-menu">
+                            <div class="products-grid">
+                                <a href="/air-diffusers">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                                    </svg>
+                                    Air Diffusers
+                                </a>
+                                <a href="/damper">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M3 12h18M3 6h18M3 18h18" />
+                                    </svg>
+                                    Damper
+                                </a>
+                                <a href="/louvres">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                    </svg>
+                                    Louvres
+                                </a>
+                                <a href="/motorised-diffuser-grille">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M12 8v8M8 12h8" />
+                                    </svg>
+                                    Motorised Diffuser-Grille
+                                </a>
+                                <a href="/registers-grilles">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                                        <path d="M3 9h18M3 15h18M9 3v18M15 3v18" />
+                                    </svg>
+                                    Registers & Grilles
+                                </a>
+                                <a href="/vav-diffuser-grille">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                                    </svg>
+                                    VAV Diffuser-Grille
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     <a href="<?php echo esc_url(get_permalink(get_page_by_path('selection-tool'))); ?>">Selection
                         Tool</a>
                     <a href="<?php echo esc_url(get_permalink(get_page_by_path('projects'))); ?>">Projects</a>

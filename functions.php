@@ -60,6 +60,13 @@ function ventech_assets()
     );
 
     // Nav hamburger toggle
+
+    wp_enqueue_style(
+        'ventech-nav-style',
+        $uri . '/assets/css/nav.css',
+        [],
+        $version
+    );
     wp_enqueue_script(
         'ventech-nav',
         $uri . '/assets/js/nav.js',
