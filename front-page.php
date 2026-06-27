@@ -82,8 +82,8 @@ $regions = [
                 <a href="<?php echo $about_page_url; ?>" class="btn btn--outline">
                     Learn more
                 </a>
-                <a href="<?php echo $products_page_url; ?>" class="btn btn--primary">
-                    Our Products
+                <a href="<?php echo $contact_page_url; ?>" class="btn btn--primary">
+                    Contact
                     <?php echo ventech_icon('chevron-right', 'icon icon--sm'); ?>
                 </a>
             </div>
