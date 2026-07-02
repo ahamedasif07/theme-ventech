@@ -4,6 +4,7 @@
 <head>
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <?php wp_head(); ?>
 </head>
 
@@ -16,7 +17,7 @@
             <div class="nav-inner">
 
                 <!-- Logo -->
-                <a href="<?php echo esc_url(home_url('/')); ?>" class="site-logo"
+                <a  href="<?php echo esc_url(home_url('/')); ?>" class="site-logo"
                     aria-label="<?php bloginfo('name'); ?> — Home">
                     <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/Logo.png"
                         alt="<?php bloginfo('name'); ?>" class="site-logo__img">
