@@ -149,6 +149,188 @@ add_action('wp_enqueue_scripts', 'ventech_assets');
 
 
 /* ============================================================
+   3a. FEATURED SLIDES — CUSTOM POST TYPE
+   Dashboard: Featured Slides  (slug: ventech_slide)
+   ============================================================ */
+function ventech_register_slide_cpt()
+{
+    $labels = [
+        'name'               => 'Featured Slides',
+        'singular_name'      => 'Featured Slide',
+        'add_new'            => 'Add New Slide',
+        'add_new_item'       => 'Add New Featured Slide',
+        'edit_item'          => 'Edit Featured Slide',
+        'new_item'           => 'New Featured Slide',
+        'view_item'          => 'View Featured Slide',
+        'search_items'       => 'Search Featured Slides',
+        'not_found'          => 'No featured slides found',
+        'not_found_in_trash' => 'No featured slides found in Trash',
+        'menu_name'          => 'Featured Slides',
+    ];
+
+    register_post_type('ventech_slide', [
+        'labels'              => $labels,
+        'public'              => false,
+        'show_ui'             => true,
+        'show_in_menu'        => true,
+        'menu_position'       => 5,
+        'menu_icon'           => 'dashicons-images-alt2',
+        'supports'            => ['title', 'thumbnail'],
+        'capability_type'     => 'post',
+        'has_archive'         => false,
+        'rewrite'             => false,
+        'show_in_rest'        => true,
+    ]);
+}
+add_action('init', 'ventech_register_slide_cpt');
+
+
+/* ── Meta box for slide content fields ─────────────────── */
+function ventech_slide_meta_box()
+{
+    add_meta_box(
+        'ventech_slide_fields',
+        'Slide Content',
+        'ventech_slide_meta_box_html',
+        'ventech_slide',
+        'normal',
+        'high'
+    );
+}
+add_action('add_meta_boxes', 'ventech_slide_meta_box');
+
+function ventech_slide_meta_box_html($post)
+{
+    wp_nonce_field('ventech_slide_save', 'ventech_slide_nonce');
+    $eyebrow  = get_post_meta($post->ID, '_vc_eyebrow',   true);
+    $desc     = get_post_meta($post->ID, '_vc_desc',      true);
+    $btn1_lbl = get_post_meta($post->ID, '_vc_btn1_lbl',  true);
+    $btn1_url = get_post_meta($post->ID, '_vc_btn1_url',  true);
+    $btn2_lbl = get_post_meta($post->ID, '_vc_btn2_lbl',  true);
+    $btn2_url = get_post_meta($post->ID, '_vc_btn2_url',  true);
+    $order    = get_post_meta($post->ID, '_vc_order',     true);
+    ?>
+    <style>
+        .vc-meta-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+        .vc-meta-field label { display:block; font-weight:600; margin-bottom:4px; }
+        .vc-meta-field input,
+        .vc-meta-field textarea { width:100%; padding:6px 8px; border:1px solid #ddd; border-radius:4px; }
+        .vc-meta-field textarea { min-height:80px; resize:vertical; }
+        .vc-meta-hint { color:#888; font-size:0.8rem; margin-top:3px; }
+    </style>
+
+    <div class="vc-meta-grid">
+        <div class="vc-meta-field">
+            <label for="vc_eyebrow">Eyebrow Label</label>
+            <input type="text" id="vc_eyebrow" name="vc_eyebrow"
+                   value="<?php echo esc_attr($eyebrow); ?>"
+                   placeholder="e.g. Our Products">
+            <p class="vc-meta-hint">Small text above the heading</p>
+        </div>
+        <div class="vc-meta-field">
+            <label for="vc_order">Display Order</label>
+            <input type="number" id="vc_order" name="vc_order"
+                   value="<?php echo esc_attr($order ?: 0); ?>" min="0" step="1">
+            <p class="vc-meta-hint">Lower number = appears first</p>
+        </div>
+    </div>
+
+    <div class="vc-meta-field" style="margin-bottom:14px;">
+        <label for="vc_desc">Slide Description</label>
+        <textarea id="vc_desc" name="vc_desc"><?php echo esc_textarea($desc); ?></textarea>
+        <p class="vc-meta-hint">Paragraph text shown beneath the heading.</p>
+    </div>
+
+    <p><strong>Button 1 (Primary)</strong></p>
+    <div class="vc-meta-grid" style="margin-bottom:14px;">
+        <div class="vc-meta-field">
+            <label for="vc_btn1_lbl">Button 1 Label</label>
+            <input type="text" id="vc_btn1_lbl" name="vc_btn1_lbl"
+                   value="<?php echo esc_attr($btn1_lbl); ?>"
+                   placeholder="e.g. Learn More">
+        </div>
+        <div class="vc-meta-field">
+            <label for="vc_btn1_url">Button 1 URL</label>
+            <input type="url" id="vc_btn1_url" name="vc_btn1_url"
+                   value="<?php echo esc_attr($btn1_url); ?>"
+                   placeholder="https://...">
+        </div>
+    </div>
+
+    <p><strong>Button 2 (Outline, optional)</strong></p>
+    <div class="vc-meta-grid">
+        <div class="vc-meta-field">
+            <label for="vc_btn2_lbl">Button 2 Label</label>
+            <input type="text" id="vc_btn2_lbl" name="vc_btn2_lbl"
+                   value="<?php echo esc_attr($btn2_lbl); ?>"
+                   placeholder="e.g. Contact">
+        </div>
+        <div class="vc-meta-field">
+            <label for="vc_btn2_url">Button 2 URL</label>
+            <input type="url" id="vc_btn2_url" name="vc_btn2_url"
+                   value="<?php echo esc_attr($btn2_url); ?>"
+                   placeholder="https://...">
+        </div>
+    </div>
+    <?php
+}
+
+function ventech_slide_save_meta($post_id)
+{
+    // Nonce check
+    if (
+        ! isset($_POST['ventech_slide_nonce']) ||
+        ! wp_verify_nonce($_POST['ventech_slide_nonce'], 'ventech_slide_save')
+    ) {
+        return;
+    }
+
+    // Autosave check
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+
+    // Capability check
+    if (! current_user_can('edit_post', $post_id)) return;
+
+    $fields = [
+        '_vc_eyebrow'  => 'vc_eyebrow',
+        '_vc_desc'     => 'vc_desc',
+        '_vc_btn1_lbl' => 'vc_btn1_lbl',
+        '_vc_btn1_url' => 'vc_btn1_url',
+        '_vc_btn2_lbl' => 'vc_btn2_lbl',
+        '_vc_btn2_url' => 'vc_btn2_url',
+        '_vc_order'    => 'vc_order',
+    ];
+
+    foreach ($fields as $meta_key => $post_key) {
+        if (isset($_POST[$post_key])) {
+            $value = $meta_key === '_vc_desc'
+                ? sanitize_textarea_field($_POST[$post_key])
+                : sanitize_text_field($_POST[$post_key]);
+            update_post_meta($post_id, $meta_key, $value);
+        }
+    }
+}
+add_action('save_post_ventech_slide', 'ventech_slide_save_meta');
+
+
+/* ── Enqueue carousel.js on front page only ────────────── */
+function ventech_carousel_assets()
+{
+    if (! is_front_page()) return;
+
+    wp_enqueue_script(
+        'ventech-carousel',
+        get_template_directory_uri() . '/assets/js/carousel.js',
+        [],
+        wp_get_theme()->get('Version'),
+        true   // load in footer
+    );
+}
+add_action('wp_enqueue_scripts', 'ventech_carousel_assets');
+
+
+
+/* ============================================================
    3. CONTACT FORM AJAX HANDLER
    ============================================================ */
 
